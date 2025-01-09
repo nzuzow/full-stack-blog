@@ -1,6 +1,24 @@
 import { useState } from "react";
 import Image from "./Image";
 import { Link } from "react-router-dom";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+
+const NavLinkList = () => {
+    return (
+        <>
+            <Link to="/">Home</Link>
+            <Link to="/">Trending</Link>
+            <Link to="/">Most Popular</Link>
+            <Link to="/">About</Link>
+            <SignedOut>
+                <Link to="/login" className="py-2 px-4 rounded-3xl bg-blue-800 text-white">Login</Link>
+            </SignedOut>
+            <SignedIn>
+                <UserButton />
+            </SignedIn>
+        </>
+    );
+};
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -26,21 +44,13 @@ const Navbar = () => {
                     onClick={() => setOpen(!open)}
                 >{open ? "X" : "☰"}</button>
                 {/* MOBILE LINK LIST */}
-                <div className={`w-full h-screen flex flex-col items-center justify-center gap-8 font-medium text-lg absolute top-16 transition-all ease-in-out ${open ? "-right-0" : "-right-[100%]"}`}>
-                    <Link to="/">Home</Link>
-                    <Link to="/">Trending</Link>
-                    <Link to="/">Most Popular</Link>
-                    <Link to="/">About</Link>
-                    <button className="py-2 px-4 rounded-3xl bg-blue-800 text-white">Login</button>
+                <div className={`w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center gap-8 font-medium text-lg absolute top-16 transition-all ease-in-out z-10 bg-[#e6e6ff] ${open ? "-right-0" : "-right-[100%]"}`}>
+                    <NavLinkList />
                 </div>
             </div>
             {/* DESKTOP MENU */}
             <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
-                <Link to="/">Home</Link>
-                <Link to="/">Trending</Link>
-                <Link to="/">Most Popular</Link>
-                <Link to="/">About</Link>
-                <button className="py-2 px-4 rounded-3xl bg-blue-800 text-white">Login</button>
+                <NavLinkList />
             </div>
         </div>
     )
