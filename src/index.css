@@ -12,3 +12,9 @@ body {
 .animatedButton {
     animation-duration: 10000ms;
 }
+
+#root .ql-container,
+#root .ql-toolbar,
+#root .ql-editor {
+    border: none;
+}
