@@ -4,9 +4,18 @@ import connectDB from "./lib/connectDB.js";
 import commentRouter from "./routes/comment.route.js";
 import postRouter from "./routes/post.route.js";
 import userRouter from "./routes/user.route.js";
+import webHookRouter from "./routes/webhook.route.js";
+import { clerkMiddleware } from "@clerk/express";
 
 const PORT = parseInt(process.env.SERVER_PORT, 10) || 3000;
 const app = express();
+
+app.use(clerkMiddleware());
+
+// The webhook router uses body-parser so moving it above the
+// call to express.json() to prevent conflict
+app.use("/webhooks", webHookRouter);
+
 app.use(express.json());
 
 app.use("/comments", commentRouter);
