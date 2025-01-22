@@ -26,6 +26,10 @@ const postSchema = new Schema(
             type: String,
             required: true
         },
+        category: {
+            type: String,
+            default: "general"
+        },
         isFeatured: {
             type: Boolean,
             default: false

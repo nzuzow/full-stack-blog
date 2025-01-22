@@ -24,8 +24,22 @@ export const createPost = async (req, res) => {
         return res.status(404).json("User not found");
     }
 
+    // Logic to create a unique slug based on the title
+    let baseSlug = req.body.title.replace(/ /g, "-").toLowerCase();
+    let slug = baseSlug;
+
+    let existingPost = await PostModel.findOne({ slug });
+    let counter = 2;
+
+    while (existingPost) {
+        slug = `${baseSlug}-${counter}`;
+        existingPost = await PostModel.findOne({ slug });
+        counter++;
+    }
+
     const newPost = new PostModel({
         user: user._id,
+        slug: slug,
         ...req.body
     });
     const post = await newPost.save();
