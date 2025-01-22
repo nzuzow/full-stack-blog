@@ -1,29 +1,77 @@
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from "react-quill-new";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const WritePage = () => {
     const { isLoaded, isSignedIn } = useUser();
+    const [content, setContent] = useState("");
+    const navigate = useNavigate();
+    const { getToken } = useAuth();
 
-    /*
-    Commented out for now so we don't have to worry about logging in.
+    const mutation = useMutation({
+        mutationFn: async (newPost) => {
+            const token = await getToken();
+            return axios.post(`${import.meta.env.VITE_API_URL}/posts`, newPost, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        },
+        onSuccess: (res) => {
+            toast.success("Post has been created");
+            navigate(`/${res.data.slug}`);
+        }
+    });
+
+
+    // Check logged in status
     if (!isLoaded) {
         return <div className="">Loading...</div>;
     }
 
     if (isLoaded && !isSignedIn) {
         return <div className="">You should login!</div>;
-    }*/
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+            title: formData.get("title"),
+            category: formData.get("category"),
+            desc: formData.get("desc"),
+            content: content
+        };
+        console.log('write page data: ', data);
+
+        mutation.mutate(data);
+    }
 
     return (
         <div className='h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6'>
             <h1 className="text-cl font-light">Create a New Post</h1>
-            <form className="flex flex-col gap-6 flex-1 mb-6">
+            <form
+                className="flex flex-col gap-6 flex-1 mb-6"
+                onSubmit={handleSubmit}
+            >
                 <button className="p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white w-max">Add a cover image</button>
-                <input className="text-4xl font-semibold bg-transparent outline-none placeholder:text-gray-400" type="text" placeholder="My Awesome Story" />
+                <input
+                    className="text-4xl font-semibold bg-transparent outline-none placeholder:text-gray-400"
+                    type="text"
+                    placeholder="My Awesome Story"
+                    name="title"
+                />
                 <div className="flex items-center gap-4">
                     <label className="text-sm" htmlFor="">Choose a Category:</label>
-                    <select className="p-2 rounded-xl bg-white shadow-md" name="cat" id="">
+                    <select
+                        className="p-2 rounded-xl bg-white shadow-md"
+                        name="category"
+                        id="">
                         <option value="general">General</option>
                         <option value="web-design">Web Design</option>
                         <option value="development">Development</option>
@@ -32,9 +80,21 @@ const WritePage = () => {
                         <option value="marketing">Marketing</option>
                     </select>
                 </div>
-                <textarea className="p-4 rounded-xl bg-white shadow-md" name="desc" placeholder="A Short Description"></textarea>
-                <ReactQuill theme="snow" className="flex-1 flex flex-col rounded-xl bg-white shadow-md"/>
-                <button className="bg-blue-800 text-white font-medium rounded-xl mt-4 py-2 px-10 self-start">Send</button>
+                <textarea
+                    className="p-4 rounded-xl bg-white shadow-md"
+                    name="desc"
+                    placeholder="A Short Description"
+                ></textarea>
+                <ReactQuill
+                    theme="snow"
+                    className="flex-1 flex flex-col rounded-xl bg-white shadow-md"
+                    value={content}
+                    onChange={setContent}
+                />
+                <button
+                    className="bg-blue-800 text-white font-medium rounded-xl mt-4 py-2 px-10 self-start disabled:bg-blue-400 disabled:cursor-not-allowed"
+                    disabled={mutation.isPending}
+                >{mutation.isPending ? "Loading..." : "Send"}</button>
             </form>
         </div>
     );
