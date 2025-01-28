@@ -26,7 +26,12 @@ export const createPost = async (req, res) => {
     }
 
     // Logic to create a unique slug based on the title
-    let baseSlug = req.body.title.replace(/ /g, "-").toLowerCase();
+    let baseSlug = req.body.title
+        .replace(/[^\w\s-]/g, '')   // Remove non-word characters except spaces and hyphens
+        .trim()                     // Remove any leading / trailing whitespace
+        .replace(/\s+/g, "-")       // Replace spaces with a hyphen
+        .toLowerCase()              // Convert to lowercase
+        .slice(0, 55);              // Limit to 55 characters to prevent the slug from being too long
     let slug = baseSlug;
 
     let existingPost = await PostModel.findOne({ slug });
