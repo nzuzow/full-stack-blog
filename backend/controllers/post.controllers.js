@@ -3,8 +3,18 @@ import PostModel from "../models/post.model.js";
 import UserModel from "../models/user.model.js";
 
 export const getPosts = async (req, res) => {
-    const posts = await PostModel.find();
-    res.status(200).json(posts);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 2;
+    const posts = await PostModel
+        .find()
+        .populate("user", "username")
+        .limit(limit)
+        .skip((page - 1) * limit);
+
+    const totalPosts = await PostModel.countDocuments();
+    const hasMore = page * limit < totalPosts;
+
+    res.status(200).json({ posts, hasMore });
 };
 
 export const getPost = async (req, res) => {
