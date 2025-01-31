@@ -5,7 +5,7 @@ const Comment = () => {
         <div className="p-4 bg-slate-50 rounded-xl">
             <div className='flex items-center gap-4'>
                 <Image
-                    src="userImg.jpeg"
+                    src={`${import.meta.env.VITE_IK_STATIC_IMG_BASE}/userImg.jpeg`}
                     className="w-10 h-10 rounded-full object-cover"
                     w="40"
                 />

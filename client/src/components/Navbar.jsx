@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Image from "./Image";
 import { Link } from "react-router-dom";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
+import { useEffect } from "react";
 
 const NavLinkList = () => {
     return (
@@ -23,12 +24,18 @@ const NavLinkList = () => {
 const Navbar = () => {
     const [open, setOpen] = useState(false);
 
+    const { getToken } = useAuth();
+
+    useEffect(() => {
+        getToken().then((token) => console.log(token));
+    }, [getToken]);
+
     return (
         <div className="navbar w-full h-16 md:h-20 flex items-center justify-between">
             {/* LOGO */}
             <Link to="/" className="flex items-center gap-4 text-2xl font-bold">
                 <Image
-                    src="logo.png"
+                    src={`${import.meta.env.VITE_IK_STATIC_IMG_BASE}/logo.png`}
                     className="w-8 h-8"
                     w={32}
                     h={32}

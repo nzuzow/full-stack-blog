@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import Image from "./Image";
 
 const FeaturedPosts = () => {
+    const baseImgPath = import.meta.env.VITE_IK_STATIC_IMG_BASE;
+
     return (
         <div className="mt-8 flex flex-col lg:flex-row gap-8">
             {/* First */}
             <div className="w-full lg:w-auto flex flex-col lg:basis-1/2 gap-4">
                 {/* image */}
-                <Image src="featured1.jpeg" className="rounded-3xl object-cover" w="960" />
+                <Image src={`${baseImgPath}/featured1.jpeg`} className="rounded-3xl object-cover" w="960" />
                 {/* details */}
                 <div className="">
                     <span className="font-semibold lg:text-lg">01.</span>
@@ -22,7 +24,7 @@ const FeaturedPosts = () => {
                 {/* Second */}
                 <div className="lg:h-1/3 flex justify-between gap-4">
                     <div className="w-1/3 aspect-video">
-                        <Image src="featured2.jpeg" className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
+                        <Image src={`${baseImgPath}/featured2.jpeg`} className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
                     </div>
                     <div className="w-2/3">
                         {/* details */}
@@ -38,7 +40,7 @@ const FeaturedPosts = () => {
                 {/* Third */}
                 <div className="lg:h-1/3 flex justify-between gap-4">
                     <div className="w-1/3 aspect-video">
-                        <Image src="featured3.jpeg" className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
+                        <Image src={`${baseImgPath}/featured3.jpeg`} className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
                     </div>
                     <div className="w-2/3">
                         {/* details */}
@@ -54,7 +56,7 @@ const FeaturedPosts = () => {
                 {/* Fourth */}
                 <div className="lg:h-1/3 flex justify-between gap-4">
                     <div className="w-1/3 aspect-video">
-                        <Image src="featured4.jpeg" className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
+                        <Image src={`${baseImgPath}/featured4.jpeg`} className="rounded-3xl object-fill lg:object-cover h-full" w="320" />
                     </div>
                     <div className="w-2/3">
                         {/* details */}
